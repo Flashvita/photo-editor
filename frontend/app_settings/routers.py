@@ -1,16 +1,27 @@
-
-import flet as ft
-
 import requests
 import json
+from typing import Union
 
-from app_settings.settings import CORS_ORIGIN
-from account import Login, Registration
+
+from app_settings.settings import (
+    CORS_ORIGIN,
+    SECRET_KEY,
+)
+
+import flet as ft
+from account import (
+    Login,
+    Registration,
+    SendSms,
+)
 from flet import (
    
     View,
    
 )
+from flet.security import encrypt, decrypt
+
+_secret_key = SECRET_KEY
 
 
 def navbar():
@@ -69,8 +80,18 @@ def appbar_profile(data, func):
                         )
     return appbar
 
+def encrypt_value(key: str):
+    #https://flet.dev/docs/guides/python/encrypting-sensitive-data/
+    secret = encrypt(key, _secret_key)
+    return secret
 
-                    #controls = [favorites]
+
+def decrypt_value(key: str):
+    #https://flet.dev/docs/guides/python/encrypting-sensitive-data/
+    secret = decrypt(key, _secret_key)
+    return secret
+
+
 def profile(obj):
     obj.page.go("/dashboard/profile")
 
@@ -113,6 +134,16 @@ def routes(obj):
     if page.route == "/logout":
         page.client_storage.remove(key="access_token")
         page.go("/")
+    if page.route == "/recover-password":
+        page.views.append(
+            View(
+                "/recover-password",
+                horizontal_alignment = ft.CrossAxisAlignment.CENTER,
+                vertical_alignment = ft.MainAxisAlignment.CENTER,
+                controls=[
+                    SendSms(page)
+                    ]
+            ))
     if page.route == "/dashboard/profile":
         #favorites = Profile(page)
         data = page.client_storage.get("user_data")

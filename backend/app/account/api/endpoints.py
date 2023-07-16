@@ -46,6 +46,7 @@ def register_account(request, payload: AccountRegistrationSchema):
             phone_number=payload.phone_number,
             first_name=payload.first_name,
             last_name=payload.last_name,
+            is_active=True,
         )
         user.set_password(payload.password)
         user.save(update_fields=["password"])

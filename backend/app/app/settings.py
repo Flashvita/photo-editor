@@ -9,11 +9,17 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-from firebase_admin import initialize_app
-
+from firebase_admin import initialize_app, credentials
+import environ
 from pathlib import Path
 from datetime import timedelta
+import environ
+import os
 
+
+
+env = environ.Env()
+environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,7 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-SECRET_KEY = 'django-insecure-!sckt5_kbeenb$--u7s$a^c9zi_0ap%wdd@xmn4-f(x@%bz*)d'
 
 
 # Application definition
@@ -87,15 +92,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'app.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
@@ -147,50 +143,25 @@ VERIFY_CODE_TIMEOUT = 300
 
 
 
-NINJA_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    #'ROTATE_REFRESH_TOKENS': False,
-    #'BLACKLIST_AFTER_ROTATION': False,
-    #'UPDATE_LAST_LOGIN': False,
-
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-    'JWK_URL': None,
-    'LEEWAY': 0,
-
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'USER_AUTHENTICATION_RULE': 'ninja_jwt.authentication.default_user_authentication_rule',
-    'AUTH_TOKEN_CLASSES': ('ninja_jwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'ninja_jwt.models.TokenUser',
-
-    'JTI_CLAIM': 'jti',
-
-    #'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    #'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    #'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-}
 
 
 # Optional ONLY IF you have initialized a firebase app already:
 # Visit https://firebase.google.com/docs/admin/setup/#python
 # for more options for the following:
 # Store an environment variable called GOOGLE_APPLICATION_CREDENTIALS
+GOOGLE_APPLICATION_CREDENTIAL = env('GOOGLE_APPLICATION_CREDENTIALS')
 # which is a path that point to a json file with your credentials.
 # Additional arguments are available: credentials, options, name
-FIREBASE_APP = initialize_app()
+cred = credentials.Certificate(f"{BASE_DIR}/firebase-credentials.json")
+
+FIREBASE_APP = initialize_app(credential=cred,)
 # To learn more, visit the docs here:
 # https://cloud.google.com/docs/authentication/getting-started>
 
 FCM_DJANGO_SETTINGS = {
      # an instance of firebase_admin.App to be used as default for all fcm-django requests
      # default: None (the default Firebase app)
-    "DEFAULT_FIREBASE_APP": None,
+    "DEFAULT_FIREBASE_APP": FIREBASE_APP,
      # default: _('FCM Django')
     "APP_VERBOSE_NAME": "Users Devices",
      # true if you want to have only one active device per registered user at a time
@@ -207,3 +178,9 @@ FCM_DJANGO_SETTINGS = {
     "UPDATE_ON_DUPLICATE_REG_ID": False,
 
 }
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    from .product_settings import *

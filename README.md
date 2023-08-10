@@ -1,4 +1,5 @@
 # Python Full-stack application with Flet and Django-ninja
+### Create .env file and set secret data to frontend and backend
 ##### touch frontend/.env backend/.env
 #### backend/.env:
 ##### DB_HOST="localhost"

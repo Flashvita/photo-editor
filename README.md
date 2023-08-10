@@ -20,3 +20,6 @@
 ### Run with docker
 ##### docker-compose build .
 ##### docker-compose up
+
+##### backend 0.0.0.0:8000
+##### frontend 0.0.0.0:5000

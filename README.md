@@ -24,4 +24,3 @@
 ### Backend admin - `0.0.0.0:8000/admin/`
 ### Backend docs - `0.0.0.0:8000/api/docs`
 ##### Frontend - `0.0.0.0:5000`
-##### [Postman collection](https://www.postman.com/planetary-moon-815943/workspace/hummersystem/collection/21235027-053ff9eb-b685-466e-b3ae-28dba6ef29bc?action=share&creator=21235027)

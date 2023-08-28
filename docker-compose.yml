@@ -7,6 +7,8 @@ services:
     command: python /app/backend/manage.py runserver 0.0.0.0:8000
     container_name: django
     image: django:app
+    depends_on:
+      - postgres
     ports:
       - 8000:8000 
     volumes:
@@ -20,6 +22,30 @@ services:
       - ./frontend/:/app/frontend
     depends_on:
       - django
+  postgres:
+    container_name: postgres
+    image: postgres
+    expose:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+    restart: always
+   
+  redis:
+    container_name: redis
+    image: redis:7
+    restart: always
+    expose:
+      - 6379
+    volumes:
+      - cache:/data
+   
+
+
       
     
   

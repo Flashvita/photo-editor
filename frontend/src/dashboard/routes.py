@@ -135,7 +135,7 @@ def routes(obj):
             View(
                 "/dashboard",
                 appbar=appbar(data, profile),
-                navigation_bar = navbar()
+                navigation_bar = navbar(page)
                     # controls = [
                     #             dashboard
                     #         ],

@@ -16,7 +16,7 @@ from flet import (
     Text,
     MainAxisAlignment,
     View,
-    border_radius, 
+    border_radius,
     icons,
     colors
 )
@@ -28,6 +28,7 @@ from src.utils import (
     send_sms,
     error_input_number
 )
+
 
 class TimeOut(UserControl):
     def __init__(self, seconds):
@@ -54,7 +55,6 @@ class TimeOut(UserControl):
     def build(self):
         self.countdown = Text()
         return self.countdown
-    
 
 
 class Registration(UserControl):
@@ -70,7 +70,7 @@ class Registration(UserControl):
                                         keyboard_type=KeyboardType.PHONE,
                                         max_length=10,
                                     )
-        
+      
         self.first_name = TextField(
                                         label="Имя",
                                         capitalization=True,
@@ -89,9 +89,7 @@ class Registration(UserControl):
                             password=True,
                             can_reveal_password=True,
                         )
-    
-    
-           
+        
     def send_registration_data(self, e):
         """
         Make request to api for save user data in database
@@ -108,14 +106,12 @@ class Registration(UserControl):
         print('data', data)
         response = requests.post(url, data=json.dumps(data))
         return response
-    
 
     def password_not_repeated(self, e):
-        self.password.error_text='Пароли не совпадают'
-        self.retry_password.error_text='Пароли не совпадают'
+        self.password.error_text = 'Пароли не совпадают'
+        self.retry_password.error_text = 'Пароли не совпадают'
         self.password.update()
         self.retry_password.update()
-
 
     def go_registration(self, e):
         if not self.check_input_password():
@@ -123,52 +119,45 @@ class Registration(UserControl):
         self.number = f"{self.phone_number.prefix_text}{self.phone_number.value}"
         if not validate_phone_number(self.number):
             return error_input_number(self)
-        else:            
+        else:
             # Sending sms after success check input data
             self.code = send_sms(self.number)
             print('self code', self.code)
             self.page.clean()
             self.page.views.append(
                     View(
-                    "/verification/phone_number",
-                    horizontal_alignment = CrossAxisAlignment.CENTER,
-                    vertical_alignment = MainAxisAlignment.CENTER,
-                    controls = [Container(
-                    border_radius=border_radius.all(5),
-                    content = Column(
-                    width = 600,
-                    controls = [TextField(
-                                            label="Введите код подтверждения",
-                                            keyboard_type=KeyboardType.NUMBER,
-                                            max_length=4,
-                                        ),
-                        ElevatedButton(text="Подтвердить", on_click=self.register_account),
-                        TimeOut(30)
+                        "/verification/phone_number",
+                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                        vertical_alignment=MainAxisAlignment.CENTER,
+                        controls=[Container(
+                                            border_radius=border_radius.all(5),
+                                            content=Column(
+                                                            width=600,
+                                                            controls=[
+                                                                    TextField(
+                                                                            label="Введите код подтверждения",
+                                                                            keyboard_type=KeyboardType.NUMBER,
+                                                                            max_length=4,
+                                                                            ),
+                                ElevatedButton(text="Подтвердить", on_click=self.register_account),
+                                TimeOut(30),
                         ]
-                    ))]
-                    # controls = [ft.TextField(
-                    #                         label="Введите код подтверждения",
-                    #                         keyboard_type=ft.KeyboardType.NUMBER,
-                    #                         max_length=4,
-                    #                     ),
-                    #     ft.ElevatedButton(text="Подтвердить", on_click=self.register_account),
-                    #     TimeOut(30)
-                    #     ]
+                    )
                 )
+            ]
+            )
             )
             self.page.update()
 
-           
     def check_input_password(self):
         check = self.password.value == self.retry_password.value
         print('check password', check)
         return check
-            
 
     def register_account(self, e):
         response = self.send_registration_data(e)
         if response.status_code == 200:
-                # Successful registration
+                #Successful registration
                 print('Successful registration', response.content)
                 self.user_tokens = json.loads(response.content)
                 tokens = json.loads(response.content)
@@ -190,7 +179,6 @@ class Registration(UserControl):
                     width = 600,
                     horizontal_alignment=CrossAxisAlignment.CENTER,
                     controls = [
-                    
                     self.phone_number,
                     self.first_name,
                     self.last_name,

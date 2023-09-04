@@ -47,7 +47,7 @@ class Dashboard(View):
                         destinations=[
                             NavigationDestination(icon=icons.HOME, label="Главная"),
                             NavigationDestination(icon=icons.SEARCH_SHARP, label="Поиск"),
-                            NavigationDestination(icon=icons.ADD_A_PHOTO_OUTLINED, label="Добавить фото"),
+                            NavigationDestination(icon=icons.ADD_A_PHOTO_OUTLINED, label="Добавить фото",),
                             NavigationDestination(
                                 icon=icons.CIRCLE_NOTIFICATIONS,
                                 label="Уведомления",
@@ -57,7 +57,8 @@ class Dashboard(View):
                                 label="Избранное",
                             ), 
                             
-                        ]
+                        ],
+                        
                     )
     def profile(self, e):
         self.page.go("/dashboard/profile")

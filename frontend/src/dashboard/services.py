@@ -1,7 +1,14 @@
 import flet as ft
 
+from flet import (
+    FilePicker,
+    FilePickerResultEvent,
+    Text,
+    Row,
+)
 
-def navbar():
+
+def navbar(page):
     navbar = ft.NavigationBar(
                         elevation=30,
                         bgcolor=ft.colors.LIGHT_BLUE_200,
@@ -10,7 +17,12 @@ def navbar():
                         destinations=[
                             ft.NavigationDestination(icon=ft.icons.HOME, label="Главная"),
                             ft.NavigationDestination(icon=ft.icons.SEARCH_SHARP, label="Поиск"),
-                            ft.NavigationDestination(icon=ft.icons.ADD_A_PHOTO_OUTLINED, label="Добавить фото"),
+                            ft.NavigationDestination(
+                                icon_content=[],
+                                icon=ft.icons.ADD_A_PHOTO_OUTLINED,
+                                label="Добавить фото"
+                                                     
+                                                     ),
                             ft.NavigationDestination(
                                 icon=ft.icons.CIRCLE_NOTIFICATIONS,
                                 label="Уведомления",
@@ -20,10 +32,26 @@ def navbar():
                                 label="Избранное",
                             ), 
                             
-                        ]
+                        ],
+                        on_change=lambda e: action_navbar_dashboard(page, e.control.selected_index),
                     )
     return navbar
+   
 
+def action_navbar_dashboard(page, number_action: int):
+    print('number_action=', number_action)
+    if number_action == 0:
+        print('Главная')
+    elif number_action == 1:
+        print('Поиск')
+    elif number_action == 2:
+        print('Добавить фото')
+        file_picker = ft.FilePicker()
+        file_picker.pick_files(allow_multiple=True)
+    elif number_action == 3:
+        print('Уведомления')
+    elif number_action == 4:
+        print('Избранное')
 
 def appbar(data, func):
     appbar = ft.AppBar(
@@ -40,7 +68,7 @@ def appbar(data, func):
 
 
 def appbar_profile(data, func):
-    appbar  = ft.AppBar(
+    appbar = ft.AppBar(
                         elevation=5,
                         leading=ft.Icon(ft.icons.PALETTE),
                         leading_width=40,

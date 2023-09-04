@@ -26,8 +26,6 @@ from account.api.services import (
     update_user_account
 )
 
-
-
 router = Router()
 
 
@@ -36,7 +34,6 @@ def register_account(request, payload: AccountRegistrationSchema):
     """
     Registration user with code from send-sms
     # api/v1/send-sms
-    
     """
     try:
         print('payload')
@@ -58,21 +55,20 @@ def register_account(request, payload: AccountRegistrationSchema):
         return 400,  {"message": f"{e}"}
 
 
-@router.post("send-sms", response={200: str ,  400: ErrorSchema})
+@router.post("send-sms", response={200: str,  400: ErrorSchema})
 def send_sms(request, payload: PhoneSchema):
-
-    """Handler for send-sms by any actions
+    """
+    Handler for send-sms by any actions
     """
     try:
         if validate_phone_number(payload.phone_number):
             code = generate_code()
             cache.set(
-                            f"{payload.phone_number}-verify-code",
-                            code,
-                            settings.VERIFY_CODE_TIMEOUT
+                        f"{payload.phone_number}-verify-code",
+                        code,
+                        settings.VERIFY_CODE_TIMEOUT
                     )
             return 200, code
-        
     except Exception as e:
         print("Exception:", e)
         return 400,  {"message": f"{e}"}
@@ -88,7 +84,6 @@ def account_update(
     payload: AccountUpdateSchema = None,
     photo: UploadedFile = File(None)
 ):
-    
     try:
         print('photo', photo)
         if payload is None:
@@ -99,9 +94,12 @@ def account_update(
         print("Exception:", e)
         return 400,  {"message": f"{e}"}
 
-@router.get("/users-me",
-            auth=JWTAuth(),
-            response={200: UsersMeSchema,  400: ErrorSchema})
+
+@router.get(
+        "/users-me",
+        auth=JWTAuth(),
+        response={200: UsersMeSchema,  400: ErrorSchema}
+)
 def get_user_info(request):
     """
     User detail information by firs request in login by set to client storage app
@@ -119,7 +117,7 @@ def get_user_info(request):
 @router.post("/device", auth=JWTAuth())
 def user_device(request, payload: DeviceInputSchema):
     """Creating or updating user device data 
-    
+
         Request data :
 
                         {
@@ -149,9 +147,9 @@ def user_device(request, payload: DeviceInputSchema):
     try:
         if fcm := FCMDevice.objects.filter(user_id=request.user).first():
             for key, value in payload.dict().items():
-               if value == None:
+                if value is None:
                    continue
-               setattr(fcm, key, value)
+                setattr(fcm, key, value)
             fcm.save()
         else:
             FCMDevice.objects.create(**payload.dict(),  user=request.user)

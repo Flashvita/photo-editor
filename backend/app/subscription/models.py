@@ -1,9 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.utils.timezone import timedelta
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
 
 from commons.utils.enhanced_models import upload_by_models
 
@@ -14,6 +12,7 @@ class SubscriptionTypes(models.IntegerChoices):
     THREE_MONT = 3
     SIX_MONTH = 6
     YEAR = 12
+
 
 class Subscription(models.Model):
     title = models.CharField(max_length=100)
@@ -66,7 +65,6 @@ class UserSubscription(models.Model):
     #     if self.created.month in [4, 6, 9, 11]:
     #         self.finish_date = self.created + timedelta(days=30)
     #     return super().save()
-    
 
     # Check subscription to expired 
     @property

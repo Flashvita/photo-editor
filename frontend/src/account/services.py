@@ -14,12 +14,12 @@ def user_check_auth(page):
         print('go dashboard')
         page.go("/dashboard")
     else:
-        login =  Login(page)
+        login = Login(page)
         page.views.append(
             View(
                 "/account/login",
-                horizontal_alignment = CrossAxisAlignment.CENTER,
-                vertical_alignment = MainAxisAlignment.CENTER,
-                controls = [login],
-                )
+                horizontal_alignment=CrossAxisAlignment.CENTER,
+                vertical_alignment=MainAxisAlignment.CENTER,
+                controls=[login],
+            )
         )

@@ -3,7 +3,6 @@ import json
 
 from app_settings.settings import CORS_ORIGIN
 
-
 from flet import (
     AppBar,
     UserControl,
@@ -34,9 +33,9 @@ class Dashboard(View):
                         center_title=True,
                         bgcolor=colors.LIGHT_BLUE_200,
                         actions=[
-                            
+
                                 IconButton(tooltip=data['name'], icon=icons.ACCOUNT_CIRCLE_SHARP, on_click=self.animate_opacityprofile),
-                                
+
                             ],
                         )
         self.navigation_bar = NavigationBar(
@@ -45,9 +44,18 @@ class Dashboard(View):
                         label_behavior=NavigationBarLabelBehavior.ALWAYS_HIDE, # Dont work hide label behavior for navigate
                         selected_index=5,
                         destinations=[
-                            NavigationDestination(icon=icons.HOME, label="Главная"),
-                            NavigationDestination(icon=icons.SEARCH_SHARP, label="Поиск"),
-                            NavigationDestination(icon=icons.ADD_A_PHOTO_OUTLINED, label="Добавить фото",),
+                            NavigationDestination(
+                                icon=icons.HOME,
+                                label="Главная
+                            ),
+                            NavigationDestination(
+                                icon=icons.SEARCH_SHARP,
+                                label="Поиск"
+                            ),
+                            NavigationDestination(
+                                icon=icons.ADD_A_PHOTO_OUTLINED,
+                                label="Добавить фото",
+                            ),
                             NavigationDestination(
                                 icon=icons.CIRCLE_NOTIFICATIONS,
                                 label="Уведомления",
@@ -58,7 +66,6 @@ class Dashboard(View):
                             ), 
                             
                         ],
-                        
                     )
     def profile(self, e):
         self.page.go("/dashboard/profile")
@@ -70,7 +77,6 @@ class Dashboard(View):
         response = requests.get(url, headers=headers)
         self.data = json.loads(response.content)
         self.page.client_storage.set("user_data", self.data)
-        
         
         return self.appbar
 

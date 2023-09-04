@@ -53,6 +53,7 @@ def action_navbar_dashboard(page, number_action: int):
     elif number_action == 4:
         print('Избранное')
 
+
 def appbar(data, func):
     appbar = ft.AppBar(
                         leading=ft.Icon(ft.icons.PALETTE),
